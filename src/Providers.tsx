@@ -2,6 +2,8 @@ import { ConfigProvider } from "antd";
 import React from "react";
 
 type Props = { children: React.ReactNode };
+import { store } from "./store/store";
+import { Provider } from "react-redux";
 
 export default function Providers({ children }: Props) {
   return (
@@ -22,7 +24,7 @@ export default function Providers({ children }: Props) {
         },
       }}
     >
-      {children}
+      <Provider store={store}>{children}</Provider>
     </ConfigProvider>
   );
 }
