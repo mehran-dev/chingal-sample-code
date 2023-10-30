@@ -13,10 +13,10 @@ export const searchValueSlice = createSlice({
   name: "searchValue",
   initialState,
   reducers: {
-    set: (state) => {
+    clear: (state) => {
       state.value = "";
     },
-    clear: (state, action: PayloadAction<string>) => {
+    set: (state, action: PayloadAction<string>) => {
       state.value = action.payload;
     },
   },

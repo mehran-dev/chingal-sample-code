@@ -1,14 +1,32 @@
-import React from "react";
+import React, { useEffect } from "react";
 import defaultProfileImage from "../assets/images/user-default-image.jpg";
 import { Breadcrumb, Button, Form, Input } from "antd";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store/store";
+import { UserAPI } from "@/services/users";
+import { User } from "@/@types/user";
 type Props = {};
 
 export default function EditUser({}: Props) {
   const navigate = useNavigate();
 
-  const onFinish = (values: any) => {};
+  const [form] = Form.useForm();
+
+  const selectedUser = useSelector(
+    (state: RootState) => state.selectedUser.value
+  );
+
+  const onFinish = (values: any) => {
+    UserAPI.updateUser(values.id, values)
+      .then((res) => {
+        toast.success("user updated !!!");
+      })
+      .catch((err) => {
+        toast.error("user Update failed !!!");
+      });
+  };
   const onFinishFailed = (errInfo: any) => {
     toast.error("Error Updating the user ");
   };
@@ -18,6 +36,63 @@ export default function EditUser({}: Props) {
     password?: string;
     remember?: string;
   };
+
+  /* 
+
+city
+company
+country
+
+
+email
+
+
+phoneNumber
+street
+userName
+username
+zipcode */
+
+  /* age
+avatar
+
+
+
+createdAt
+dateOfBirth
+
+id
+name
+ */
+
+  const deleteUserHandler = () => {
+    const values: Partial<User> = form.getFieldsValue(true);
+    const id = values?.id;
+    UserAPI.deleteUser(id as string)
+      .then((res) => {
+        console.log(res);
+        toast.success("User deleted Successfully ");
+      })
+      .catch((err) => {
+        toast.error("Error WHILE  deleting  user");
+        console.log(err);
+      });
+  };
+
+  useEffect(() => {
+    form.setFieldsValue({
+      id: "",
+      city: selectedUser?.city,
+      company: selectedUser?.company,
+      country: selectedUser?.country,
+      email: selectedUser?.email,
+      phoneNumber: selectedUser?.phoneNumber,
+      street: selectedUser?.street,
+      userName: selectedUser?.userName,
+      username: selectedUser?.username,
+      zipcode: selectedUser?.zipcode,
+    });
+  }, [selectedUser]);
 
   return (
     <div>
@@ -42,12 +117,23 @@ export default function EditUser({}: Props) {
         }}
       >
         <Form
+          form={form}
           className="text-white"
           name="basic"
           labelCol={{ span: 24 }}
           wrapperCol={{ span: 24 }}
           style={{ maxWidth: 600 }}
-          initialValues={{ remember: true }}
+          initialValues={{
+            city: selectedUser?.city,
+            company: selectedUser?.company,
+            country: selectedUser?.country,
+            email: selectedUser?.email,
+            phoneNumber: selectedUser?.phoneNumber,
+            street: selectedUser?.street,
+            userName: selectedUser?.userName,
+            username: selectedUser?.username,
+            zipcode: selectedUser?.zipcode,
+          }}
           onFinish={onFinish}
           onFinishFailed={onFinishFailed}
           autoComplete="off"
@@ -75,9 +161,9 @@ export default function EditUser({}: Props) {
               <div className="w-1/2 mx-2">
                 <Form.Item<FieldType>
                   label="نام"
-                  name="username"
+                  name="userName"
                   rules={[
-                    { required: true, message: "Please input your username!" },
+                    { required: true, message: "Please input your userName!" },
                   ]}
                   className="custom-label"
                 >
@@ -89,9 +175,9 @@ export default function EditUser({}: Props) {
               <div className="w-1/2 mx-2">
                 <Form.Item<FieldType>
                   label="ایمیل"
-                  name="username"
+                  name="email"
                   rules={[
-                    { required: true, message: "Please input your username!" },
+                    { required: true, message: "Please input your email!" },
                   ]}
                   className="custom-label"
                 >
@@ -101,9 +187,12 @@ export default function EditUser({}: Props) {
               <div className="w-1/2 mx-2">
                 <Form.Item<FieldType>
                   label="شماره تلفن"
-                  name="username"
+                  name="phoneNumber"
                   rules={[
-                    { required: true, message: "Please input your username!" },
+                    {
+                      required: true,
+                      message: "Please input your phoneNumber!",
+                    },
                   ]}
                   className="custom-label"
                 >
@@ -115,9 +204,9 @@ export default function EditUser({}: Props) {
               <div className="w-1/4 mx-2">
                 <Form.Item<FieldType>
                   label="کشور"
-                  name="username"
+                  name="country"
                   rules={[
-                    { required: true, message: "Please input your username!" },
+                    { required: true, message: "Please input your country!" },
                   ]}
                   className="custom-label"
                 >
@@ -127,9 +216,9 @@ export default function EditUser({}: Props) {
               <div className="w-1/4 mx-2">
                 <Form.Item<FieldType>
                   label="شهر"
-                  name="username"
+                  name="city"
                   rules={[
-                    { required: true, message: "Please input your username!" },
+                    { required: true, message: "Please input your city!" },
                   ]}
                   className="custom-label"
                 >
@@ -139,9 +228,9 @@ export default function EditUser({}: Props) {
               <div className="w-1/4 mx-2">
                 <Form.Item<FieldType>
                   label="خیابان"
-                  name="username"
+                  name="street"
                   rules={[
-                    { required: true, message: "Please input your username!" },
+                    { required: true, message: "Please input your street!" },
                   ]}
                   className="custom-label"
                 >
@@ -151,9 +240,9 @@ export default function EditUser({}: Props) {
               <div className="w-1/4 mx-2">
                 <Form.Item<FieldType>
                   label="کد پستی"
-                  name="username"
+                  name="zipcode"
                   rules={[
-                    { required: true, message: "Please input your username!" },
+                    { required: true, message: "Please input your zipcode!" },
                   ]}
                   className="custom-label"
                 >
@@ -165,11 +254,11 @@ export default function EditUser({}: Props) {
               <div className="w-full mx-2">
                 <Form.Item<FieldType>
                   label="شرکت"
-                  name="username"
+                  name="company"
                   rules={[
                     {
                       required: true,
-                      message: "Please input your username!",
+                      message: "Please input your company!",
                     },
                   ]}
                   className="custom-label"
@@ -181,10 +270,17 @@ export default function EditUser({}: Props) {
           </div>
 
           <div className="flex justify-around">
-            <Button className="mx-3 bg-sky-700 hover:bg-sky-800  text-white w-36 h-10 border-none shadow-2xl ">
+            <Button
+              className="mx-3 bg-sky-700 hover:bg-sky-800  text-white w-36 h-10 border-none shadow-2xl "
+              htmlType="submit"
+            >
               ویرایش
             </Button>
-            <Button className="mx-3 bg-red-700 hover:bg-red-800  text-white w-36 h-10 border-none shadow-2xl ">
+            <Button
+              className="mx-3 bg-red-700 hover:bg-red-800  text-white w-36 h-10 border-none shadow-2xl "
+              htmlType="button"
+              onClick={deleteUserHandler}
+            >
               حذف
             </Button>
           </div>

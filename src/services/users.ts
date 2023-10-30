@@ -3,6 +3,7 @@
 // /users/:id (PUT)
 // /users/:id (DELETE)
 
+import { User } from "@/@types/user";
 import { baseUrl } from "./configs";
 
 export class UserAPI {
@@ -22,9 +23,10 @@ export class UserAPI {
       },
     });
   };
-  static updateUser = (userId: string) => {
-    return fetch(`${baseUrl}/users`, {
+  static updateUser = (userId: string, data: User | any) => {
+    return fetch(`${baseUrl}/users/${userId}`, {
       method: "PUT",
+      body: JSON.stringify(data),
       headers: {
         "Content-Type": "application/json",
       },

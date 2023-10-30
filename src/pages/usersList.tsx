@@ -5,11 +5,15 @@ import type { ColumnsType, TableProps } from "antd/es/table";
 import toast from "react-hot-toast";
 import { User } from "@/@types/user";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { select } from "@/store/slices/selectedUserSlice";
 
 type Props = {};
 
 export default function UsersList({}: Props) {
   const [users, setUsers] = useState<User[] | null>(null);
+  const dispatch = useDispatch();
+
   const navigate = useNavigate();
   useEffect(() => {
     UserAPI.getUsers()
@@ -25,6 +29,15 @@ export default function UsersList({}: Props) {
         console.log(err);
       });
   }, []);
+
+  const deleteHandler = (user: User) => {
+    dispatch(select(user));
+    navigate("/edit-user");
+  };
+  const editHandler = (user: User) => {
+    dispatch(select(user));
+    navigate("/edit-user");
+  };
 
   const columns: ColumnsType<User> = [
     {
@@ -120,7 +133,8 @@ export default function UsersList({}: Props) {
             onClick={() => {
               console.log("done");
 
-              toast.success(JSON.stringify(record));
+              //toast.success(JSON.stringify(record));
+              deleteHandler(record);
             }}
           >
             حذف
@@ -129,8 +143,9 @@ export default function UsersList({}: Props) {
             className="bg-sky-700 mx-3 hover:bg-sky-800 rounded-md px-2 py-1"
             onClick={() => {
               navigate("/edit-user");
+              editHandler(record);
 
-              toast.success(JSON.stringify(record));
+              //toast.success(JSON.stringify(record));
             }}
           >
             ویرایش

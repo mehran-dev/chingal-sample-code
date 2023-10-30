@@ -4,9 +4,9 @@ import { Input, Space } from "antd";
 import { AudioOutlined } from "@ant-design/icons";
 import { BsSearch } from "react-icons/bs";
 
-type Props = {};
+type Props = { onSearch: Function };
 
-export default function SearchButton({}: Props) {
+export default function SearchButton({ onSearch }: Props) {
   const { Search } = Input;
   const suffix = true ? (
     <></>
@@ -19,9 +19,9 @@ export default function SearchButton({}: Props) {
     />
   );
 
-  const onSearch = () => {
-    console.log("//complete this later ");
-  };
+  // const onSearch = () => {
+  //   console.log("//complete this later ");
+  // };
 
   return (
     <div className="mx-3 bg-red-500 w-80">
@@ -31,10 +31,8 @@ export default function SearchButton({}: Props) {
         enterButton={<BsSearch />}
         size="large"
         suffix={suffix}
-        onSearch={onSearch}
+        onSearch={(v, e) => onSearch(v, e)}
       />
-      {/* <Input />
-      <Button> Search </Button> */}
     </div>
   );
 }

@@ -2,9 +2,10 @@ import { ConfigProvider } from "antd";
 import React from "react";
 
 type Props = { children: React.ReactNode };
-import { store } from "./store/store";
+import { persistor, store } from "./store/store";
 import { Provider } from "react-redux";
 
+import { PersistGate } from "redux-persist/integration/react";
 export default function Providers({ children }: Props) {
   return (
     <ConfigProvider
@@ -24,7 +25,9 @@ export default function Providers({ children }: Props) {
         },
       }}
     >
-      <Provider store={store}>{children}</Provider>
+      <PersistGate loading={null} persistor={persistor}>
+        <Provider store={store}>{children}</Provider>
+      </PersistGate>
     </ConfigProvider>
   );
 }
