@@ -8,6 +8,13 @@ export default function Providers({ children }: Props) {
     <ConfigProvider
       theme={{
         components: {
+          Breadcrumb: {
+            itemColor: "#fff",
+            lastItemColor: "#aaf",
+            linkColor: "#99f",
+            linkHoverColor: "red",
+            separatorColor: "#f2f",
+          },
           Layout: {
             //colorBgHeader: "black",
             //colorBgBody: "skyblue"

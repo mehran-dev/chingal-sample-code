@@ -2,7 +2,58 @@
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+  font-family: IranYekan;
+  src: url("./assets/fonts/IRANYekanMobileBlack.woff2");
+}
+
+body {
+  font-family: IranYekan !important;
+}
+
+body > * {
+  font-family: inherit !important;
+}
+
 body {
   background-color: #020b1f;
   color: #fff;
+}
+
+.rtl {
+  direction: rtl !important;
+}
+.ltr {
+  direction: ltr !important;
+}
+
+/* antd override */
+
+table {
+  border: 2px solid #eee;
+}
+
+table:hover,
+tr:hover,
+thead:hover {
+  background: #20293c !important;
+}
+
+.ant-table-tbody > tr.ant-table-row:hover > td {
+  background: none !important;
+}
+.ant-table-thead .ant-table-cell {
+  background-color: #020b1f !important;
+  color: #fff !important;
+}
+.custom-label label.ant-form-item-label,
+.custom-label label {
+  color: white !important;
+}
+
+tr.warning-table-row > td.ant-table-cell {
+  background: #1b192e !important;
+}
+td.ant-table-column-sort {
+  background: #1b192e !important;
 }

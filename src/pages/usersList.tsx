@@ -1,18 +1,16 @@
 import { UserAPI } from "@/services/users";
-import React, { useEffect } from "react";
-import { Table } from "antd";
+import React, { useEffect, useState } from "react";
+import { Breadcrumb, Table } from "antd";
 import type { ColumnsType, TableProps } from "antd/es/table";
+import toast from "react-hot-toast";
+import { User } from "@/@types/user";
+import { useNavigate } from "react-router-dom";
 
 type Props = {};
 
-interface DataType {
-  key: React.Key;
-  name: string;
-  age: number;
-  address: string;
-}
-
 export default function UsersList({}: Props) {
+  const [users, setUsers] = useState<User[] | null>(null);
+  const navigate = useNavigate();
   useEffect(() => {
     UserAPI.getUsers()
       .then((response) => {
@@ -20,13 +18,15 @@ export default function UsersList({}: Props) {
       })
       .then((res) => {
         console.log(res);
+        setUsers(res);
       })
       .catch((err) => {
+        toast.error("Error Fetchig Users");
         console.log(err);
       });
   }, []);
 
-  const columns: ColumnsType<DataType> = [
+  const columns: ColumnsType<User> = [
     {
       title: "نام",
       dataIndex: "name",
@@ -64,23 +64,24 @@ export default function UsersList({}: Props) {
       title: "سن",
       dataIndex: "age",
       defaultSortOrder: "descend",
-      sorter: (a, b) => a.age - b.age,
+      sorter: (a, b) => +a.age - +b.age,
     },
     {
       title: "شماره تلفن ",
-      dataIndex: "age",
+      dataIndex: "phoneNumber",
       defaultSortOrder: "descend",
-      sorter: (a, b) => a.age - b.age,
+      sorter: (a, b) => +a.phoneNumber - +b.phoneNumber,
     },
     {
       title: "ایمیل",
-      dataIndex: "age",
+      dataIndex: "email",
       defaultSortOrder: "descend",
-      sorter: (a, b) => a.age - b.age,
+      //FIXME add this todo
+      // sorter: (a, b) => a.age - b.age,
     },
     {
       title: "آدرس",
-      dataIndex: "address",
+      dataIndex: "street",
       filters: [
         {
           text: "London",
@@ -95,7 +96,7 @@ export default function UsersList({}: Props) {
     },
     {
       title: "شرکت",
-      dataIndex: "address",
+      dataIndex: "company",
       filters: [
         {
           text: "London",
@@ -108,36 +109,38 @@ export default function UsersList({}: Props) {
       ],
       onFilter: (value: string, record) => record.address.indexOf(value) === 0,
     },
+    {
+      title: "دسترسی ها",
+      dataIndex: "",
+      key: "x",
+      render: (record) => (
+        <>
+          <button
+            className="bg-red-700 mx-3 hover:bg-red-800 rounded-md px-2 py-1"
+            onClick={() => {
+              console.log("done");
+
+              toast.success(JSON.stringify(record));
+            }}
+          >
+            حذف
+          </button>
+          <button
+            className="bg-sky-700 mx-3 hover:bg-sky-800 rounded-md px-2 py-1"
+            onClick={() => {
+              navigate("/edit-user");
+
+              toast.success(JSON.stringify(record));
+            }}
+          >
+            ویرایش
+          </button>
+        </>
+      ),
+    },
   ];
 
-  const data = [
-    {
-      key: "1",
-      name: "John Brown",
-      age: 32,
-      address: "New York No. 1 Lake Park",
-    },
-    {
-      key: "2",
-      name: "Jim Green",
-      age: 42,
-      address: "London No. 1 Lake Park",
-    },
-    {
-      key: "3",
-      name: "Joe Black",
-      age: 32,
-      address: "Sydney No. 1 Lake Park",
-    },
-    {
-      key: "4",
-      name: "Jim Red",
-      age: 32,
-      address: "London No. 2 Lake Park",
-    },
-  ];
-
-  const onChange: TableProps<DataType>["onChange"] = (
+  const onChange: TableProps<User[]>["onChange"] = (
     pagination,
     filters,
     sorter,
@@ -148,18 +151,30 @@ export default function UsersList({}: Props) {
 
   return (
     <div>
-      <div>UsersList</div>
+      <Breadcrumb
+        className="text-white rtl mx-7"
+        items={[
+          {
+            title: <a href="#">لیست کاربران</a>,
+            onClick: () => {
+              navigate("/");
+            },
+          },
+        ]}
+      />
+
       <div
-        className="mx-16 "
+        className="mx-16 mt-20"
         style={{
           direction: "rtl",
         }}
       >
         <Table
           className="text-white "
-          rootClassName="bg-primary-1 border-b-2 border-b-solid"
+          rootClassName="bg-primary-1 border-b-2  border-b-solid"
           columns={columns}
-          dataSource={data}
+          // @ts-ignore
+          dataSource={users}
           onChange={onChange}
           //direction="rtl"
           rowClassName={(record: any, index) =>
