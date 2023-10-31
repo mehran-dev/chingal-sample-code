@@ -31,40 +31,7 @@ export default function EditUser({}: Props) {
     toast.error("Error Updating the user ");
   };
 
-  type FieldType = {
-    username?: string;
-    password?: string;
-    remember?: string;
-  };
-
-  /* 
-
-city
-company
-country
-
-
-email
-
-
-phoneNumber
-street
-userName
-username
-zipcode */
-
-  /* age
-avatar
-
-
-
-createdAt
-dateOfBirth
-
-id
-name
- */
-
+  type FieldType = User;
   const deleteUserHandler = () => {
     const values: Partial<User> = form.getFieldsValue(true);
     const id = values?.id;

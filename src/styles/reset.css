@@ -1,0 +1,78 @@
+@font-face {
+  font-family: "IranYekan";
+  src: url("./assets/fonts/IRANYekanMobileBlack.woff2");
+}
+
+@font-face {
+  font-family: "IRANYekanMobileBlack";
+  src: url("./fonts/IRANYekanMobileBlack.woff2") format("woff2");
+  font-weight: 900;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "IRANYekanMobileBold";
+  src: url("./fonts/IRANYekanMobileBold.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "IRANYekanMobileExtraBlack";
+  src: url("./fonts/IRANYekanMobileExtraBlack.woff2") format("woff2");
+  font-weight: 900;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "IRANYekanMobileExtraBold";
+  src: url("./fonts/IRANYekanMobileExtraBold.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "IRANYekanMobileLight";
+  src: url("./fonts/IRANYekanMobileLight.woff2") format("woff2");
+  font-weight: 300;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "IRANYekanMobileMedium";
+  src: url("./fonts/IRANYekanMobileMedium.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "IRANYekanMobileRegular";
+  src: url("./fonts/IRANYekanMobileRegular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "IRANYekanMobileThin";
+  src: url("./fonts/IRANYekanMobileThin.woff2") format("woff2");
+  font-weight: 100;
+  font-style: normal;
+}
+
+body {
+  background-color: #020b1f;
+  color: #fff;
+}
+
+body,
+table,
+table > * {
+  font-family: "IranYekan", "IRANYekanMobileBlack", "IRANYekanMobileBold",
+    "IRANYekanMobileExtraBlack", "IRANYekanMobileExtraBold",
+    "IRANYekanMobileLight", "IRANYekanMobileMedium", "IRANYekanMobileRegular",
+    "IRANYekanMobileThin", sans-serif !important;
+}
+
+body > * {
+  font-family: inherit !important;
+}

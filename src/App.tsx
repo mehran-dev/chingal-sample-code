@@ -1,6 +1,4 @@
 import React, { useState } from "react";
-
-import "./App.css";
 import Layout from "./layout/layout";
 import Routers from "./routers";
 import Providers from "./Providers";

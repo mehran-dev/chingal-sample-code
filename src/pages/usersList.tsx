@@ -5,16 +5,32 @@ import type { ColumnsType, TableProps } from "antd/es/table";
 import toast from "react-hot-toast";
 import { User } from "@/@types/user";
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
 import { select } from "@/store/slices/selectedUserSlice";
+import { useSelector, useDispatch } from "react-redux";
+import { setSorting } from "@/store/slices/sortSlice";
+import { RootState } from "@/store/store";
 
 type Props = {};
-
 export default function UsersList({}: Props) {
   const [users, setUsers] = useState<User[] | null>(null);
   const dispatch = useDispatch();
 
   const navigate = useNavigate();
+  const sorting = useSelector((state: RootState) => state.sorting.value);
+  const onTableChange: TableProps<User[]>["onChange"] = (
+    pagination,
+    filters,
+    sorter,
+    extra
+  ) => {
+    console.log("params", pagination, filters, sorter, extra);
+    dispatch(setSorting(sorter as any));
+    console.log("sorter", sorter);
+  };
+  useEffect(() => {
+    console.log("sorting ", sorting);
+  }, [dispatch]);
+
   useEffect(() => {
     UserAPI.getUsers()
       .then((response) => {
@@ -39,101 +55,81 @@ export default function UsersList({}: Props) {
     navigate("/edit-user");
   };
 
-  const columns: ColumnsType<User[]> = [
+  const columns: ColumnsType<User> = [
     {
       title: "نام",
       dataIndex: "name",
-      filters: [
-        {
-          text: "Joe",
-          value: "Joe",
-        },
-        {
-          text: "Jim",
-          value: "Jim",
-        },
-        {
-          text: "Submenu",
-          value: "Submenu",
-          children: [
-            {
-              text: "Green",
-              value: "Green",
-            },
-            {
-              text: "Black",
-              value: "Black",
-            },
-          ],
-        },
-      ],
-      // specify the condition of filtering result
-      // here is that finding the name started with `value`
-      onFilter: (value: string, record) => record.name.indexOf(value) === 0,
-      sorter: (a, b) => a.name.length - b.name.length,
-      sortDirections: ["descend"],
+
+      sorter: (a, b) => {
+        if (sorting.field === "name") {
+          return sorting.order === "ascend"
+            ? a.name.localeCompare(b.name)
+            : b.name.localeCompare(a.name);
+        }
+        return 0;
+      },
     },
     {
       title: "سن",
       dataIndex: "age",
-      defaultSortOrder: "descend",
+
       sorter: (a, b) => +a.age - +b.age,
     },
     {
       title: "شماره تلفن ",
       dataIndex: "phoneNumber",
-      defaultSortOrder: "descend",
+
       sorter: (a, b) => +a.phoneNumber - +b.phoneNumber,
     },
     {
       title: "ایمیل",
       dataIndex: "email",
       defaultSortOrder: "descend",
-      //FIXME add this todo
-      // sorter: (a, b) => a.age - b.age,
+
+      sorter: (a, b) => {
+        if (sorting.field === "email") {
+          return sorting.order === "ascend"
+            ? a.name.localeCompare(b.name)
+            : b.name.localeCompare(a.name);
+        }
+        return 0;
+      },
     },
     {
       title: "آدرس",
       dataIndex: "street",
-      filters: [
-        {
-          text: "London",
-          value: "London",
-        },
-        {
-          text: "New York",
-          value: "New York",
-        },
-      ],
-      onFilter: (value: string, record) => record.address.indexOf(value) === 0,
+      sorter: (a, b) => {
+        if (sorting.field === "street") {
+          return sorting.order === "ascend"
+            ? a.name.localeCompare(b.name)
+            : b.name.localeCompare(a.name);
+        }
+        return 0;
+      },
     },
     {
       title: "شرکت",
       dataIndex: "company",
-      filters: [
-        {
-          text: "London",
-          value: "London",
-        },
-        {
-          text: "New York",
-          value: "New York",
-        },
-      ],
-      onFilter: (value: string, record) => record.address.indexOf(value) === 0,
+      sorter: (a, b) => {
+        if (sorting.field === "company") {
+          return sorting.order === "ascend"
+            ? a.name.localeCompare(b.name)
+            : b.name.localeCompare(a.name);
+        }
+        return 0;
+      },
     },
     {
       title: "دسترسی ها",
       dataIndex: "",
-      key: "x",
+      key: "x-access",
       render: (record) => (
         <>
           <button
             className="bg-red-700 mx-3 hover:bg-red-800 rounded-md px-2 py-1"
-            onClick={() => {
-              console.log("done");
+            onClick={(e: React.MouseEvent) => {
+              e.stopPropagation();
 
-              //toast.success(JSON.stringify(record));
               deleteHandler(record);
             }}
           >
@@ -141,11 +137,10 @@ export default function UsersList({}: Props) {
           </button>
           <button
             className="bg-sky-700 mx-3 hover:bg-sky-800 rounded-md px-2 py-1"
-            onClick={() => {
+            onClick={(e: React.MouseEvent) => {
+              e.stopPropagation();
               navigate("/edit-user");
               editHandler(record);
-
-              //toast.success(JSON.stringify(record));
             }}
           >
             ویرایش
@@ -154,15 +149,6 @@ export default function UsersList({}: Props) {
       ),
     },
   ];
-
-  const onChange: TableProps<User[]>["onChange"] = (
-    pagination,
-    filters,
-    sorter,
-    extra
-  ) => {
-    // console.log("params", pagination, filters, sorter, extra);
-  };
 
   return (
     <div>
@@ -197,16 +183,15 @@ export default function UsersList({}: Props) {
           }}
           className="text-white "
           rootClassName="bg-primary-1 border-b-2  border-b-solid"
-          columns={columns}
-          // @ts-ignore
-          dataSource={users}
-          onChange={onChange}
-          //direction="rtl"
+          columns={columns as any}
+          dataSource={users as any}
+          onChange={onTableChange}
           rowClassName={(record: any, index) =>
             index % 2 == 0
               ? "bg-primary-2 text-white "
               : "bg-primary-1 text-white"
           }
+          {...sorting}
         />
       </div>
     </div>

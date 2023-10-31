@@ -4,31 +4,40 @@ import storage from "redux-persist/lib/storage";
 
 import searchValueReducer from "./slices/searchValue";
 import selectedUserReducer from "./slices/selectedUserSlice";
+import sortReducer from "./slices/sortSlice";
 
-const persistConfig = {
-  key: "root",
+const persistConfigSearch = {
+  key: "search",
+  storage,
+};
+const persistConfigSelectedUser = {
+  key: "selectedUser",
+  storage,
+};
+const persistConfigSorting = {
+  key: "sorting",
   storage,
 };
 
 const persistedSearchValueReducer = persistReducer(
-  persistConfig,
+  persistConfigSearch,
   searchValueReducer
 );
 const persistedSelectedUserReducer = persistReducer(
-  persistConfig,
+  persistConfigSelectedUser,
   selectedUserReducer
 );
+const persistedSortReducer = persistReducer(persistConfigSorting, sortReducer);
 
 export const store = configureStore({
   reducer: {
     searchValue: persistedSearchValueReducer,
     selectedUser: persistedSelectedUserReducer,
+    sorting: persistedSortReducer,
   },
 });
 
 export const persistor = persistStore(store);
 
-// Infer the `RootState` and `AppDispatch` types from the store itself
 export type RootState = ReturnType<typeof store.getState>;
-// Inferred type: {posts: PostsState, comments: CommentsState, users: UsersState}
 export type AppDispatch = typeof store.dispatch;

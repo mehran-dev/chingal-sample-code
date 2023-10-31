@@ -10,6 +10,7 @@ type Props = {};
 
 export default function Header({}: Props) {
   const dispatch = useDispatch();
+
   const searchValue = useSelector(
     (state: RootState) => state.searchValue.value
   );
@@ -20,8 +21,7 @@ export default function Header({}: Props) {
         <ThemeButton />
 
         <SearchButton
-          onSearch={(v) => {
-            console.log(v);
+          onSearch={(v: string) => {
             dispatch(set(v));
           }}
         />
