@@ -39,7 +39,7 @@ export default function UsersList({}: Props) {
     navigate("/edit-user");
   };
 
-  const columns: ColumnsType<User> = [
+  const columns: ColumnsType<User[]> = [
     {
       title: "نام",
       dataIndex: "name",
@@ -185,6 +185,16 @@ export default function UsersList({}: Props) {
         }}
       >
         <Table
+          onRow={(record: Record<any, any>, rowIndex: number | undefined) => {
+            return {
+              onClick: (event) => {
+                toast.error(
+                  "Please click on Actions to update/delete  \n \n " +
+                    record.username
+                );
+              },
+            };
+          }}
           className="text-white "
           rootClassName="bg-primary-1 border-b-2  border-b-solid"
           columns={columns}

@@ -26,7 +26,7 @@ export default function Header({}: Props) {
           }}
         />
       </div>
-      <div>{JSON.stringify(searchValue)}</div>
+
       <div className=" mr-6 ml-auto">
         <img src={logoImage} />
       </div>
